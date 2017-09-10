@@ -69,4 +69,7 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+
+    // Callbacks should be used to ensure that feeds are loaded before they are tested.
+    // Implement error handling for undefined variables and out-of-bound array access.
 }());
