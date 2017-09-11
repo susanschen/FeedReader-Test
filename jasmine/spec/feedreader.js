@@ -1,4 +1,4 @@
-/* global describe, it, expect, $, beforeEach, allFeeds, loadFeed */
+/* global describe, it, expect, $, beforeEach, beforeAll, allFeeds, loadFeed */
 
 /* feedreader.js
  *
@@ -68,9 +68,6 @@ $(function() {
           * clicked and does it hide when clicked again.
           */
         it('changes visibility when menu icon is clicked', function(){
-            // error handling
-            expect($('.menu-icon-link')).toBeDefined();
-
             // displays menu when clicked
             $('.menu-icon-link').click();
             expect($('body').hasClass('menu-hidden')).toBe(false);
@@ -84,48 +81,56 @@ $(function() {
     /* Test suite "Initial Entries" */
     describe('Initial Entries', function() {
 
-        /*  Write a test that ensures when the loadFeed
+        /* A test that ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
-         * - loadFeed() is asynchronous so this test will require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+
+        // loadFeed() is asynchronous so this test will require
+        // the use of Jasmine's beforeEach and asynchronous done() function.
         beforeEach(function(done){
-            loadFeed(0, function(){
-                done();
-            });
+            // simplified version since anonymous callback function has no code
+            loadFeed(0, done);
         });
 
         it('has at least one entry element when loadFeed completes', function() {
-            // error handling
-            expect($('.feed')).toBeDefined();
-
-            expect($('.feed').has('.entry')).toBeDefined();
-            expect($('.entry')).toBeDefined();
+            expect($('.feed .entry').length).toBeGreaterThan(0);
         });
     });
 
     /*  Test suite "New Feed Selection" */
     describe('New Feed Selection', function(){
 
-        /* A test that ensures when a new feed is loaded
+        /* A test that ensures when a new feed selection is loaded
          * by the loadFeed function that the content actually changes.
-         * - loadFeed() is asynchronous.
          */
         var oldFeed, newFeed;
-        oldFeed = $('.feed').text();
-        //console.log("old: " + oldFeed); shows empty feed
 
+        // loadFeed() is asynchronous
         beforeEach(function(done){
+            // 0 is the ID for the first feed selection "Udacity Blog"
             loadFeed(0, function(){
+                // All code inside this anonymous callback function
+                // will run after loadFeed(0) has finished successfully
+                oldFeed = $('.feed .entry').text();
+                // console.log('Old: ' + oldFeed); // shows Udacity Blog feeds
                 done();
             });
+            // The code here will run immediately after loadFeed is called.
+            // It will not wait for async loadFeed() to finish.
+            // only good if this task doesn't need to wait for `loadFeed` to finish
         });
 
-        it('changes the content', function(){
-            newFeed = $('.feed').text();
-            // console.log("new: " + newFeed); shows loaded feed
-            expect(newFeed).not.toBe(oldFeed);
+        it('changes the content', function(done){
+            // 1 is the ID for the second feed selection "CSS Tricks"
+            loadFeed(1, function() {
+                // Code here will run after loadFeed(1) has finished successfully
+                newFeed = $('.feed .entry').text();
+                // console.log('New: ' + newFeed); // shows CSS Tricks feeds
+                expect(newFeed).not.toBe(oldFeed);
+                done();
+            });
+            // Code here will run immediately (not wait for loadFeed(1) to finish)
         });
     });
 
