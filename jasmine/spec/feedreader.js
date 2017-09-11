@@ -1,3 +1,5 @@
+/* global describe, it, expect, $, beforeEach, allFeeds, loadFeed */
+
 /* feedreader.js
  *
  * This is the spec file that Jasmine will read and contains
@@ -69,9 +71,13 @@ $(function() {
           * clicked and does it hide when clicked again.
           */
         it('changes visibility when menu icon is clicked', function(){
+            // error handling
+            expect($('.menu-icon-link')).toBeDefined();
+
             // displays menu when clicked
             $('.menu-icon-link').click();
             expect($('body').hasClass('menu-hidden')).toBe(false);
+
             // hides menu when clicked
             $('.menu-icon-link').click();
             expect($('body').hasClass('menu-hidden')).toBe(true);
@@ -87,16 +93,43 @@ $(function() {
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
-        it();
+        beforeEach(function(done){
+            loadFeed(0, function(){
+                done();
+            });
+        });
+
+        it('has at least one entry element when loadFeed completes', function() {
+            // error handling
+            expect($('.feed')).toBeDefined();
+
+            expect($('.feed').has('.entry')).toBeDefined();
+            expect($('.entry')).toBeDefined();
+        });
     });
 
     /* TODO: Write a new test suite named "New Feed Selection" */
+    describe('New Feed Selection', function(){
 
         /* TODO: Write a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+        var oldFeed, newFeed;
+        oldFeed = $('.feed').text();
+        //console.log("old: " + oldFeed); shows empty feed
 
-    // Callbacks should be used to ensure that feeds are loaded before they are tested.
-    // Implement error handling for undefined variables and out-of-bound array access.
+        beforeEach(function(done){
+            loadFeed(0, function(){
+                done();
+            });
+        });
+
+        it('changes the content', function(){
+            newFeed = $('.feed').text();
+            // console.log("new: " + newFeed); shows loaded feed
+            expect(newFeed).not.toBe(oldFeed);
+        });
+    });
+
 }());
