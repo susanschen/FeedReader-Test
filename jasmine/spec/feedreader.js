@@ -108,6 +108,7 @@ $(function() {
 
         // loadFeed() is asynchronous
         beforeEach(function(done){
+
             // 0 is the ID for the first feed selection "Udacity Blog"
             loadFeed(0, function(){
                 // All code inside this anonymous callback function
@@ -116,21 +117,23 @@ $(function() {
                 // console.log('Old: ' + oldFeed); // shows Udacity Blog feeds
                 done();
             });
-            // The code here will run immediately after loadFeed is called.
-            // It will not wait for async loadFeed() to finish.
-            // only good if this task doesn't need to wait for `loadFeed` to finish
-        });
 
-        it('changes the content', function(done){
-            // 1 is the ID for the second feed selection "CSS Tricks"
+            // Any code here will run immediately after loadFeed(0) is called.
+            // It will not wait for async loadFeed() to finish.
+            // So loadFeed(1) will run immediately without waiting for loadFeed(0) to finish
+
+              // 1 is the ID for the second feed selection "CSS Tricks"
             loadFeed(1, function() {
-                // Code here will run after loadFeed(1) has finished successfully
+                // All code here will run after loadFeed(1) has finished successfully
                 newFeed = $('.feed .entry').text();
                 // console.log('New: ' + newFeed); // shows CSS Tricks feeds
-                expect(newFeed).not.toBe(oldFeed);
                 done();
             });
-            // Code here will run immediately (not wait for loadFeed(1) to finish)
+
+        });
+
+        it('changes the content', function(){
+            expect(newFeed).not.toBe(oldFeed);
         });
     });
 
