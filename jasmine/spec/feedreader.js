@@ -115,24 +115,22 @@ $(function() {
                 // will run after loadFeed(0) has finished successfully
                 oldFeed = $('.feed .entry').text();
                 // console.log('Old: ' + oldFeed); // shows Udacity Blog feeds
-                done();
-            });
 
+                // 1 is the ID for the second feed selection "CSS Tricks"
+                loadFeed(1, function() {
+                    // All code here will run after loadFeed(1) has finished successfully
+                    newFeed = $('.feed .entry').text();
+                    // console.log('New: ' + newFeed); // shows CSS Tricks feeds
+                    done();
+                });
+            });
             // Any code here will run immediately after loadFeed(0) is called.
             // It will not wait for async loadFeed() to finish.
-            // So loadFeed(1) will run immediately without waiting for loadFeed(0) to finish
-
-              // 1 is the ID for the second feed selection "CSS Tricks"
-            loadFeed(1, function() {
-                // All code here will run after loadFeed(1) has finished successfully
-                newFeed = $('.feed .entry').text();
-                // console.log('New: ' + newFeed); // shows CSS Tricks feeds
-                done();
-            });
-
         });
 
         it('changes the content', function(){
+            expect(oldFeed.length).toBeGreaterThan(0);
+            expect(newFeed.length).toBeGreaterThan(0);
             expect(newFeed).not.toBe(oldFeed);
         });
     });
